@@ -1,21 +1,52 @@
 const display = document.getElementById("display");
+const historyBox = document.getElementById("history");
+const historyList = document.getElementById("historyList");
 
-function appendValue(value) {
-  display.value += value;
+let current = "";
+
+function append(value) {
+  if (display.innerText === "0") current = "";
+  current += value;
+  display.innerText = current;
 }
 
-function clearDisplay() {
-  display.value = "";
-}
-
-function deleteLast() {
-  display.value = display.value.slice(0, -1);
+function clearAll() {
+  current = "";
+  display.innerText = "0";
 }
 
 function calculate() {
   try {
-    display.value = eval(display.value);
+    const result = eval(current);
+    addHistory(current + " = " + result);
+    current = result.toString();
+    display.innerText = current;
   } catch {
-    display.value = "Error";
+    display.innerText = "Error";
   }
+}
+
+function toggleSign() {
+  if (current) {
+    current = (parseFloat(current) * -1).toString();
+    display.innerText = current;
+  }
+}
+
+function percent() {
+  if (current) {
+    current = (parseFloat(current) / 100).toString();
+    display.innerText = current;
+  }
+}
+
+function toggleHistory() {
+  historyBox.style.display =
+    historyBox.style.display === "block" ? "none" : "block";
+}
+
+function addHistory(text) {
+  const li = document.createElement("li");
+  li.innerText = text;
+  historyList.prepend(li);
 }
